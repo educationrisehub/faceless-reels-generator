@@ -2,8 +2,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Niche, CreationMode, Platform, ContentType } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 const getHookSchema = () => ({
   type: Type.OBJECT,
   properties: {
@@ -88,6 +86,10 @@ export async function generateContent(params: {
   topic: string;
 }): Promise<any> {
   const { niche, mode, platforms, contentType, topic } = params;
+  
+  // Mandatory: SDK instance must use process.env.API_KEY.
+  // Initializing inside the function prevents the app from crashing on load if 'process' is not immediately defined.
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   let systemInstruction = "You are an expert faceless reels content strategist. ";
   let userPrompt = "";
